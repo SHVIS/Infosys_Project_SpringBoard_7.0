@@ -1,0 +1,15 @@
+package edu.infosys.finCoreBankApplication;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class FinCoreBankApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(FinCoreBankApplication.class, args);
+	}
+/*
+ * userId:Lotus Pass:Mango
+ * userId:Rose Pass:Apple */
+}
