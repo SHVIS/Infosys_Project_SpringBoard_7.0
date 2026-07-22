@@ -11,5 +11,7 @@ public interface CustomerDao {
 	public void deleteCustomerById(Long customerId);
 	public Long getMaxCustomerId();
 	public List<Customer> getCustomerByStatus(String status);
+	public Customer getCustomerByUsername(String username);
+	public List<Long> getAllCustomerIds();
  
 }

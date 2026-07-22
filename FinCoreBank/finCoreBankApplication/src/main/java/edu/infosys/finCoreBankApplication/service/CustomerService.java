@@ -32,5 +32,17 @@ public class CustomerService {
 		customer.setEmail(user.getEmail());
 		return customer;
 	}
- 
+	public Boolean checkCustomer() {
+		String username=service.getUserId();
+		Customer customer=customerDao.getCustomerByUsername(username);
+		if(customer==null || customer.getStatus().equalsIgnoreCase("R"))
+			return true;
+		else
+			return false;
+	}
+	public Customer getCustomerByUsername() {
+		String username=service.getUserId();
+		Customer customer=customerDao.getCustomerByUsername(username);
+		return customer;
+	}
 }

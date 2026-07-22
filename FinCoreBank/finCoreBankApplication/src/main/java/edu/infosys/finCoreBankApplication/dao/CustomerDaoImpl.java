@@ -10,7 +10,7 @@ import edu.infosys.finCoreBankApplication.bean.Customer;
 
 @Repository
 @Service
-public class CustomerDaoImpl implements CustomerDao {
+public class CustomerDaoImpl  implements CustomerDao {
 
 	@Autowired
 	private CustomerRepository repository;
@@ -43,6 +43,18 @@ public class CustomerDaoImpl implements CustomerDao {
 	@Override
 	public List<Customer> getCustomerByStatus(String status) {
 		return repository.getCustomerByStatus(status);
+	}
+
+	@Override
+	public Customer getCustomerByUsername(String username) {
+		// TODO Auto-generated method stub
+		return repository.getCustomerByUsername(username);
+	}
+
+	@Override
+	public List<Long> getAllCustomerIds() {
+		// TODO Auto-generated method stub
+		return repository.getAllCustomerIds();
 	}
 
 }

@@ -12,4 +12,9 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
 	public Long getMaxCustomerId();
 	@Query("Select a from Customer a where a.status=?1")
 	public List<Customer> getCustomerByStatus(String status);
+	@Query("Select a from Customer a where a.username=?1")
+	public Customer getCustomerByUsername(String username);
+	@Query("Select customerId from Customer where status='A'")
+	public List<Long> getAllCustomerIds();
+ 
 }
