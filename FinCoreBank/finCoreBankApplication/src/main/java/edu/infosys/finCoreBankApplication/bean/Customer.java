@@ -10,6 +10,12 @@ public class Customer {
 	private String customerName;
 	private String customerAddress;
 	private String dateOfJoin;
+	private String dateOfBirth;
+	private String email;
+	private String username;
+	private String status;
+	
+	
 	public String getDateOfJoin() {
 		return dateOfJoin;
 	}
@@ -22,13 +28,6 @@ public class Customer {
 	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	private String dateOfBirth;
-	private String email;
-	private String username;
-	private String status;
-	
-	
-	
 	
 	public Long getCustomerId() {
 		return customerId;
@@ -79,5 +78,10 @@ public class Customer {
 		this.username = username;
 		this.status = status;
 	}
+	public Customer() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
  
 }
