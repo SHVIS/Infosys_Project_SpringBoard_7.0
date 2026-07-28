@@ -53,23 +53,27 @@ public class AccountController{
 		return accountDao.getAccounts();
 	}
  
-	@DeleteMapping("/account/{accountNumber}")
+	@DeleteMapping("/account/{accountId}")
 	public void deleteAccountByNumber(@PathVariable Long accountId) {
 		accountDao.deleteAccountByNumber(accountId);
 	}
  
-	@GetMapping("/account-info")
-	public Long getMaxAccountNumber() {
+	@GetMapping("/account-id")
+	public Long generateAccountNumber() {
 		return service.generateAccountNumber();
 	}
  
-	@GetMapping("/account-info/{customerId}")
-	public List<Account> getAccountsByCustomerId(@PathVariable Long customerId) {
-		return accountDao.getAccountsByCustomerId(customerId);
+	@GetMapping("/account-info")
+	public List<Account> getAccountsByCustomerId() {
+		return service.getAccountsByCustomerId();
 	}
 	
 	@GetMapping("/balance-info/{accountNumber}")
 	public Double getBalanceByAccountNumber(@PathVariable Long accountNumber) {
 		return accountDao.getBalanceByAccountNumber(accountNumber);
+	}
+	@GetMapping("/id-list")
+	public List<Long> getAccountIdsByCustomerId(){
+		return service.getAccountIdsByCustomerId();
 	}
 }
