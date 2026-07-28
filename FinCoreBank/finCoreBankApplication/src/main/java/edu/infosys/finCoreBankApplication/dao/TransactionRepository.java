@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import edu.infosys.finCoreBankApplication.bean.Transaction;
 
 public interface TransactionRepository  extends JpaRepository<Transaction,String> {
-	@Query(value = "SELECT MAX(CAST(SUBSTRING(transactionId, 2) AS UNSIGNED)) FROM Transaction", nativeQuery = true)
+	@Query(value = "SELECT MAX(CAST(SUBSTRING(transaction_id, 2) AS UNSIGNED)) FROM Transaction", nativeQuery = true)
     public Long getMaxTransactionId();
 	
 	@Query(value = "SELECT a FROM Transaction a where a.customerId=?1")
