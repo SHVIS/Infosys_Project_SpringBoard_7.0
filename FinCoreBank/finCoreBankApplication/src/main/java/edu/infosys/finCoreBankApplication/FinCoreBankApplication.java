@@ -11,5 +11,15 @@ public class FinCoreBankApplication {
 	}
 /*
  * userId:Lotus Pass:Mango
- * userId:Rose Pass:Apple */
+ * userId:pine Pass:Apple ,Role Customer
+User Id: Rose, Password: Apple, Role: Customer
+ * userId:cherry Pass:cakes ,Role Customer
+User Id: Jasmine, Password: Orange, Role: Customer
+
+User Id: Jenia, Password: Pineapple, Role: Customer
+
+User Id: Tulip, Password: Pears, Role: Customer
+
+User Id: Marigold, Password: Guava, Role: Customer
+ *  */
 }
