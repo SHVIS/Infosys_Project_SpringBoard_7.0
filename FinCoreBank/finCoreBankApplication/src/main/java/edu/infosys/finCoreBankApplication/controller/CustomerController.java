@@ -36,7 +36,7 @@ public class CustomerController{
 		customerDao.addCustomer(newCustomer);
 	}
 
-	@GetMapping("/customer/{customerid}")
+	@GetMapping("/customer/{customerId}")
 	public Customer getCustomerById(@PathVariable Long customerId) {
 		return customerDao.getCustomerById(customerId);
 	}
@@ -46,8 +46,8 @@ public class CustomerController{
 		return customerDao.getCustomers();
 	}
 
-	@DeleteMapping("/customer/{customerid}")
-	public void deleteCustomerById(Long customerId) {
+	@DeleteMapping("/customer/{customerId}")
+	public void deleteCustomerById(@PathVariable Long customerId) {
 		customerDao.deleteCustomerById(customerId);		
 	}
 	@PutMapping("/customer")
@@ -65,4 +65,23 @@ public class CustomerController{
 		// TODO Auto-generated method stub
 		return customerDao.getCustomerByStatus(status);
 	}
+
+	@GetMapping("/cust-user")
+	public Customer getCustomerByUsername() {
+	return service.getCustomerByUsername();
+	}
+	@GetMapping("/cust-chk")
+	public Integer checkCustomer() {
+		int flag=-1;
+		if(service.checkCustomer())
+			flag=1;
+		else
+		flag=0;
+		return flag;
+	}
+ 
+	@GetMapping("/cust-ids")
+	public List<Long> getAllCustomerIds(){
+		return customerDao.getAllCustomerIds();
+	}	
 }
