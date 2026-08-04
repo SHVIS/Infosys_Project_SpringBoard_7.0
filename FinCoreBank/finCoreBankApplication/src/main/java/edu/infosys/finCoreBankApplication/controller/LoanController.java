@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import edu.infosys.finCoreBankApplication.bean.Loan;
 import edu.infosys.finCoreBankApplication.dao.LoanDao;
 import edu.infosys.finCoreBankApplication.service.LoanService;
@@ -23,9 +22,7 @@ public class LoanController {
 
 	@PostMapping("/loan")
 	public void addLoan(@RequestBody Loan loan) {
-		loan.setLoanId(service.generateLoanId());
 		loan =service.calculateLoanDetails(loan);
-		loan.setLoanStatus("A");
 		loanDao.addLoan(loan);
 	}
 

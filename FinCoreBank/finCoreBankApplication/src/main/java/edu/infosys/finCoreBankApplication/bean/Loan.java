@@ -18,7 +18,7 @@ public class Loan {
 	private Double loanAmount;
 	
 	//Additional Entity 
-	private String loanStatus;
+	private String loanStatus="A";
 	
 	
 	public Loan() {
@@ -42,75 +42,39 @@ public class Loan {
 	}
 
 	
-	public String getLoanId() {
-		return loanId;
-	}
+	public String getLoanId() {return loanId;}
 
-	public void setLoanId(String loanId) {
-		this.loanId = loanId;
-	}
+	public void setLoanId(String loanId) {this.loanId = loanId;}
 
-	public Integer getLoanTenure() {
-		return loanTenure;
-	}
+	public Integer getLoanTenure() {return loanTenure;}
 
-	public void setLoanTenure(Integer loanTenure) {
-		this.loanTenure = loanTenure;
-	}
+	public void setLoanTenure(Integer loanTenure) {this.loanTenure = loanTenure;}
 
-	public Integer getTotalTenure() {
-		return totalTenure;
-	}
+	public Integer getTotalTenure() {return totalTenure;}
 
-	public void setTotalTenure(Integer totalTenure) {
-		this.totalTenure = totalTenure;
-	}
+	public void setTotalTenure(Integer totalTenure) {this.totalTenure = totalTenure;}
 
-	public Double getInterestRate() {
-		return interestRate;
-	}
+	public Double getInterestRate() {return interestRate;}
 
-	public void setInterestRate(Double interestRate) {
-		this.interestRate = interestRate;
-	}
+	public void setInterestRate(Double interestRate) {this.interestRate = interestRate;}
 
-	public Double getEmiPayable() {
-		return emiPayable;
-	}
+	public Double getEmiPayable() {return emiPayable;}
 
-	public void setEmiPayable(Double emiPayable) {
-		this.emiPayable = emiPayable;
-	}
+	public void setEmiPayable(Double emiPayable) {this.emiPayable = emiPayable;}
 
-	public Double getTotalInterestPayable() {
-		return totalInterestPayable;
-	}
+	public Double getTotalInterestPayable() {return totalInterestPayable;}
 
-	public void setTotalInterestPayable(Double totalInterestPayable) {
-		this.totalInterestPayable = totalInterestPayable;
-	}
+	public void setTotalInterestPayable(Double totalInterestPayable) {this.totalInterestPayable = totalInterestPayable;}
 
-	public Double getTotalCost() {
-		return totalCost;
-	}
+	public Double getTotalCost() {return totalCost;}
 
-	public void setTotalCost(Double totalCost) {
-		this.totalCost = totalCost;
-	}
+	public void setTotalCost(Double totalCost) {this.totalCost = totalCost;}
 
-	public Double getLoanAmount() {
-		return loanAmount;
-	}
+	public Double getLoanAmount() {return loanAmount;}
 
-	public void setLoanAmount(Double loanAmount) {
-		this.loanAmount = loanAmount;
-	}
+	public void setLoanAmount(Double loanAmount) {this.loanAmount = loanAmount;}
 
-	public String getLoanStatus() {
-		return loanStatus;
-	}
+	public String getLoanStatus() {return loanStatus;}
 
-	public void setLoanStatus(String loanStatus) {
-		this.loanStatus = loanStatus;
-	}
+	public void setLoanStatus(String loanStatus) {this.loanStatus = loanStatus;}
 }

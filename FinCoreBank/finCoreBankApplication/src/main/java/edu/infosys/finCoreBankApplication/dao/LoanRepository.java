@@ -6,13 +6,18 @@ import org.springframework.data.jpa.repository.Query;
 import edu.infosys.finCoreBankApplication.bean.Loan;
 
 public interface LoanRepository extends JpaRepository<Loan, String> {
-
-    @Query("Select max(loanId) from Loan")
-    public String getMaxLoanId();
-
+	//got mixed query due to store id as String "L"+1000008
+	@Query(value = "SELECT MAX(CAST(SUBSTRING(loan_id, 2) AS INTEGER)) FROM loan",nativeQuery = true)
+	public Long getMaxLoanId();
     @Query("Select l from Loan l where l.loanStatus=?1")
     public List<Loan> getLoansByStatus(String status);
-
+    @Query(value = "SELECT loanId FROM Loan")
+    public List<String> getLoanIdList();
+ 
+    
+    
+    
+    
 //    @Query("SELECT l FROM Loan l WHERE l.customerId = ?1")
 //    public List<Loan> getLoansByCustomerId(Long customerId);
 //

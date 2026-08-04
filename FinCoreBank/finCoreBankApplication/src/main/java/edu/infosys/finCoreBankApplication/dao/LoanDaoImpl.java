@@ -36,7 +36,7 @@ public class LoanDaoImpl implements LoanDao {
     }
 
     @Override
-    public String getMaxLoanId() {
+    public Long getMaxLoanId() {
         return repository.getMaxLoanId();
     }
 
@@ -44,6 +44,9 @@ public class LoanDaoImpl implements LoanDao {
     public List<Loan> getLoansByStatus(String loanStatus) {
         return repository.getLoansByStatus(loanStatus);
     }
-
+    @Override
+    public List<String> getLoanIdList() {
+        return repository.getLoanIdList();
+    }
  
 }
