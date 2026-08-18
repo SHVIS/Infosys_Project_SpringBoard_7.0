@@ -57,4 +57,8 @@ public class AccountDaoImpl implements AccountDao {
 		return repository.getBalanceByAccountNumber(accountNumber);
 	}
 
+	@Override
+	public List<Account> getAccountsByAccountType(String accountType) {
+		return repository.getAccountsByAccountType(accountType);
+	}
 }

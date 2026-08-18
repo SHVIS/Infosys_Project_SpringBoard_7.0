@@ -35,7 +35,7 @@ public class TransactionController {
 		return service.generateTransactionNumber();
 	}
  
-	@GetMapping("/trans-info/{cno}")
+	/* @GetMapping("/trans-info/{cno}")
 	public List<Transaction> getTransactionByCustomer(@PathVariable Long cno) {
 		return transactionDao.getTransactionByCustomer(cno);
 	}
@@ -43,12 +43,26 @@ public class TransactionController {
 	public List<Transaction> getTransactionByAccount(@PathVariable Long acno) {
 		return transactionDao.getTransactionByAccount(acno);
 	}
- 
 	@GetMapping("/trans-type/{type}")
 	public List<Transaction> getTransactionByType(@PathVariable String type) {
 		return transactionDao.getTransactionByType(type);
 	}
-	
+ */
+
+    @GetMapping("/trans/customer/{customerId}")
+    public List<Transaction> getTransactionByCustomer(@PathVariable Long customerId) {
+        return transactionDao.getTransactionByCustomer(customerId);
+    }
+
+    @GetMapping("/trans/account/{accountNumber}")
+    public List<Transaction> getTransactionByAccount(@PathVariable Long accountNumber) {
+        return transactionDao.getTransactionByAccount(accountNumber);
+    }
+	@GetMapping("/trans/type/{type}")
+    public List<Transaction> getTransactionByType(@PathVariable String type) {
+        return transactionDao.getTransactionByType(type);
+    }
+
 	@PostMapping("/trans")
 	public Integer addTransaction(@RequestBody Transaction transaction) {
 		int flag=0;

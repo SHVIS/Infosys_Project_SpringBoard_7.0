@@ -13,4 +13,5 @@ public interface AccountDao {
     public List<Account> getAccountsByStatus(String status);
     public List<Account> getAccountsByCustomerId(Long customerId);
     public Double getBalanceByAccountNumber(Long accountNumber);
+    public List<Account> getAccountsByAccountType(String accountType);
 }

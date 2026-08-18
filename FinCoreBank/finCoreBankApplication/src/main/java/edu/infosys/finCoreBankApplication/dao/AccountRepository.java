@@ -19,4 +19,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     
 	@Query("Select balance from Account where accountNumber=?1 ")
 	public Double getBalanceByAccountNumber(Long accountNumber);	
+	
+	@Query("SELECT a FROM Account a WHERE a.accountType = ?1")
+    public List<Account> getAccountsByAccountType(String accountType);
+	
+	@Query("Select a from Account a where accountType=?1 ")
+	public List<Account> getAccountsByType(String accountType);
 }

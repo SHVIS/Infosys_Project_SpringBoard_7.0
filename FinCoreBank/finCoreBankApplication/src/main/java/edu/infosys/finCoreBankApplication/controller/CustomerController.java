@@ -76,7 +76,7 @@ public class CustomerController{
 		if(service.checkCustomer())
 			flag=1;
 		else
-		flag=0;
+			flag=0;
 		return flag;
 	}
  

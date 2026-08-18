@@ -3,6 +3,7 @@ package edu.infosys.finCoreBankApplication.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,10 +33,20 @@ public class AccountController{
 	@Autowired
 	private AccountRepository repository;
 	
+	
+	
 	@PostMapping("/account")
-	public void addAccount(@RequestBody Account account) {
-		accountDao.addAccount(account);
-	}
+    public ResponseEntity<?> addAccount(@RequestBody Account account) {
+        try {
+            Account saved = service.createAccount(account);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+//	public void addAccount(@RequestBody Account account) {
+//		accountDao.addAccount(account);
+//	}
 	
 	@PutMapping("/account")
 	public void updateAccount(@RequestBody Account account) {
@@ -76,4 +87,19 @@ public class AccountController{
 	public List<Long> getAccountIdsByCustomerId(){
 		return service.getAccountIdsByCustomerId();
 	}
+	
+	@GetMapping("/id-list/{accountType}")
+	public List<Long> getAccountIdsByCustomerIdAndType(@PathVariable String accountType){
+		return service.getAccountIdsByCustomerIdAndType(accountType);
+	}
+ 
+@	GetMapping("/accounts/{accountType}")
+	public List<Account> getAccountsByAccountType(@PathVariable String accountType){
+		return accountDao.getAccountsByAccountType(accountType);
+	}
+	@GetMapping("/account-info/{accountType}")
+	public List<Account> getAccountsByCustomerIdAndType(@PathVariable String accountType){
+		return service.getAccountsByCustomerIdAndType(accountType);
+	}
+ 
 }
