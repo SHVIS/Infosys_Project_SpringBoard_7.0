@@ -161,6 +161,7 @@ public class CustomerLoanService {
 
         customerLoanApplication.setStatus(PENDING);
         customerLoanApplication.setLoanDate(now());
+        customerLoanApplication.setClosedDate(null);
 
         customerLoanApplication.setReviewedDate(null);
         customerLoanApplication.setRejectionReason(null);
@@ -222,6 +223,7 @@ public class CustomerLoanService {
         customerLoanApplication.setOutstandingAmount(customerLoanApplication.getTotalCost());
         customerLoanApplication.setReviewedDate(now());
         customerLoanApplication.setRejectionReason(null);
+//        customerLoanApplication.setClosedDate(null);
         customerLoanDao.addCustomerLoan(customerLoanApplication);
 
         Transaction transaction = new Transaction();
@@ -247,6 +249,7 @@ public class CustomerLoanService {
         customerLoanApplication.setOutstandingAmount(0.0);
         customerLoanApplication.setReviewedDate(now());
         customerLoanApplication.setRejectionReason(reason == null || reason.isBlank() ? "Application rejected by bank" : reason);
+        customerLoanApplication.setClosedDate(null);
         customerLoanDao.addCustomerLoan(customerLoanApplication);
         return customerLoanApplication;
     }
@@ -257,51 +260,104 @@ public class CustomerLoanService {
         if (!APPROVED.equals(customerLoanApplication.getStatus())) {
             throw new RuntimeException("Repayment is allowed only for approved loans");
         }
-        double outstanding = customerLoanApplication.getOutstandingAmount() == null ? 0.0 : customerLoanApplication.getOutstandingAmount();
+        double outstanding = customerLoanApplication.getOutstandingAmount() == null ? 0.0 :round2(customerLoanApplication.getOutstandingAmount());
         if (outstanding <= 0) throw new RuntimeException("Loan has no outstanding amount");
+        double emi = customerLoanApplication.getEmiPayable() == null? 0.0      :round2(customerLoanApplication.getEmiPayable());
 
-        Double amount = request.getPaymentAmount();
-        if (amount == null || amount <= 0) throw new RuntimeException("Repayment amount should be greater than zero");
-        amount = round2(amount);
-        if (amount > outstanding) throw new RuntimeException("Repayment cannot exceed outstanding amount");
+if (emi <= 0) throw new RuntimeException("Loan EMI is not available");
 
-        Long paymentId = customerLoanApplication.getPaymentAccountNumber();
-        if (paymentId == null) paymentId = customerLoanApplication.getAccountNumber();
-        if (paymentId == null) throw new RuntimeException("Repayment account has not been created");
+        double amount;
+        int paidTenures = customerLoanApplication.getPaidTenure() == null ? 0: customerLoanApplication.getPaidTenure();
 
-        Account payment = accountDao.getAccountByNumber(paymentId);
-        if (payment == null || !LOAN_ACCOUNT.equalsIgnoreCase(payment.getAccountType())
-                || !customerLoanApplication.getCustomerId().equals(payment.getCustomerId())) {
-            throw new RuntimeException("Dedicated loan repayment account not found");
-        }
+int totalTenures = customerLoanApplication.getTotalTenure() == null? 0: customerLoanApplication.getTotalTenure();
 
-        double balance = payment.getBalance() == null ? 0.0 : payment.getBalance();
-        if (balance < amount) throw new RuntimeException("Insufficient balance in the loan repayment account");
+amount =(paidTenures + 1 >= totalTenures || outstanding <= emi + 10) ? outstanding:emi;
 
+        Long loanAccountNumber = customerLoanApplication.getPaymentAccountNumber();
+        if (loanAccountNumber == null) loanAccountNumber = customerLoanApplication.getAccountNumber();
+        if (loanAccountNumber == null) throw new RuntimeException("Loan account has not been created");
+
+        Account loanAccount = accountDao.getAccountByNumber(loanAccountNumber);
+        if (loanAccount == null || !LOAN_ACCOUNT.equalsIgnoreCase(loanAccount.getAccountType())
+                || !customerLoanApplication.getCustomerId().equals(loanAccount.getCustomerId())) 
+            throw new RuntimeException("Loan payment account not found");
+        
+        Long savingsAccountNumber = customerLoanApplication.getSavingsAccountNumber();
+        if (savingsAccountNumber == null) throw new RuntimeException("No savings account is linked to this loan");
+
+        Account savings = accountDao.getAccountByNumber(savingsAccountNumber);
+        if (savings == null || !ACTIVE.equalsIgnoreCase(savings.getStatus()) || !customerLoanApplication.getCustomerId().equals(savings.getCustomerId())|| LOAN_ACCOUNT.equalsIgnoreCase(
+                                savings.getAccountType())) 
+        throw new RuntimeException("Savings account linked to this loan is not available");
+
+        
+        
+        double savingsBalance = savings.getBalance() == null ? 0.0 : round2(savings.getBalance());
+        if (savingsBalance < amount)throw new RuntimeException("Insufficient balance in savings account " + savings.getAccountNumber());
+     
         double remaining = round2(outstanding - amount);
         double paid = round2((customerLoanApplication.getAmountPaidTillDate() == null ? 0.0 : customerLoanApplication.getAmountPaidTillDate()) + amount);
-        payment.setBalance(round2(balance - amount));
-        accountDao.addAccount(payment);
+        int nextPaidTenure = (customerLoanApplication.getPaidTenure() == null ? 0: customerLoanApplication.getPaidTenure()) + 1;
+        savings.setBalance(round2(savingsBalance - amount));
+        accountDao.addAccount(savings);
 
-        Transaction transaction = new Transaction();
-        transaction.setTransactionId(transactionService.generateTransactionNumber());
-        transaction.setAccountNumber(paymentId);
-        transaction.setCustomerId(customerLoanApplication.getCustomerId());
-        transaction.setTransactionAmount(amount);
-        transaction.setTransactionType("Loan Repayment");
-        transaction.setTransactionDate(now());
-        transactionDao.addTransaction(transaction);
+        double loanBalance = loanAccount.getBalance() == null? 0.0: loanAccount.getBalance();
+        loanAccount.setBalance(round2(loanBalance + amount));
+
+        accountDao.addAccount(loanAccount);
+        Transaction debit = new Transaction();
+
+        debit.setTransactionId(
+                        transactionService.generateTransactionNumber());
+
+        debit.setAccountNumber(
+                        savings.getAccountNumber());
+
+        debit.setCustomerId(customerLoanApplication.getCustomerId());
+
+        debit.setTransactionAmount(amount);
+
+        debit.setTransactionType(
+                        "Loan Repayment (Debit)");
+
+        debit.setTransactionDate(now());
+
+        transactionDao.addTransaction(debit);
+
+        Transaction credit = new Transaction();
+
+        credit.setTransactionId(
+                        transactionService.generateTransactionNumber());
+
+        credit.setAccountNumber(
+                        loanAccount.getAccountNumber());
+
+        credit.setCustomerId(
+        		customerLoanApplication.getCustomerId());
+
+        credit.setTransactionAmount(amount);
+
+        credit.setTransactionType(
+                        "Loan Repayment (Credit)");
+
+        credit.setTransactionDate(now());
+
+        transactionDao.addTransaction(credit);
 
         customerLoanApplication.setAmountPaidTillDate(paid);
         customerLoanApplication.setOutstandingAmount(remaining);
-        if (remaining <= 0) customerLoanApplication.setStatus(CLOSED);
+   customerLoanApplication.setPaidTenure(nextPaidTenure);
+        if (remaining <= 0) {
+        	customerLoanApplication.setStatus(CLOSED);
+        	customerLoanApplication.setClosedDate(now());
+        }
         customerLoanDao.addCustomerLoan(customerLoanApplication);
 
         LoanRepayment repayment = new LoanRepayment();
         repayment.setRepaymentId(generateRepaymentId());
-        repayment.setApplicationId(applicationId);
+        repayment.setApplicationId(applicationId); 
         repayment.setCustomerId(customerLoanApplication.getCustomerId());
-        repayment.setAccountNumber(paymentId);
+        repayment.setAccountNumber(loanAccountNumber);
         repayment.setPaymentAmount(amount);
         repayment.setPaymentDate(now());
         repayment.setPaymentMode("ACCOUNT");

@@ -148,7 +148,7 @@ const AdminMenu = () => {
                                 id="account-dropdown"
                             >
                                 <NavDropdown.Item
-                                    onClick={() => goTo("/account-repo")}
+                                    onClick={() => goTo("/account-list")}
                                 >
                                     Account List
                                 </NavDropdown.Item>
@@ -195,6 +195,14 @@ const AdminMenu = () => {
                                     }
                                 >
                                     Customer Loan Applications
+                                </NavDropdown.Item>
+
+                                <NavDropdown.Item
+                                    onClick={() =>
+                                        goTo("/loan-applications")
+                                    }
+                                >
+                                    Customer Loans
                                 </NavDropdown.Item>
                             </NavDropdown>
 

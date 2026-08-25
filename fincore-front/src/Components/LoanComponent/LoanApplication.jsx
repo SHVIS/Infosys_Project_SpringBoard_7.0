@@ -16,7 +16,7 @@ const LoanApplication = () => {
     const [loan, setLoan] = useState(null);
     const [customer, setCustomer] = useState(null);
     const [accounts, setAccounts] = useState([]);
-    const [accountNumber, setAccountNumber] = useState("");
+    const [savingsAccountNumber, setSavingsAccountNumber] = useState("");
     const [loanAmount, setLoanAmount] = useState("");
     const [loanTenure, setLoanTenure] = useState("");
     const [loading, setLoading] = useState(true);
@@ -25,37 +25,64 @@ const LoanApplication = () => {
     const [message, setMessage] = useState("");
 
     useEffect(() => {
-        const load = async () => {
-            try {
-                const [loanResponse, customerResponse] = await Promise.all([getLoanById(loanId), getCustomerByUsername()]);
-                const scheme = loanResponse.data;
-                const currentCustomer = customerResponse.data;
-                setLoan(scheme);
-                setCustomer(currentCustomer);
-                setLoanAmount(scheme.loanAmount || "");
-                setLoanTenure(scheme.totalTenure || "");
-                const accountResponse = await getAccountsByCustomerId(currentCustomer.customerId);
-                // const accountResponse = await getAccountIdsByCustomerIdAndType("Savings");
-                const list = Array.isArray(accountResponse.data) ? accountResponse.data : [];
-                setAccounts(list.filter((account) => account.status === "A" && account.accountType==="Savings")," \n",); //culprit
-                 
-               // setAccounts(list) ;  
-                if (list.length === 1) setAccountNumber(String(list[0].accountNumber));
-            } catch (e) {
-                setError(e.response?.data?.message || "Unable to prepare the loan application.");
-            } finally { setLoading(false); }
-        };
-        load();
-    }, [loanId]);
+        const loadData = async () => {
+        try {
+          setLoading(true);
+          setError("");
+
+          const [loanResponse, customerResponse] = await Promise.all([getLoanById(loanId), getCustomerByUsername()]);
+
+        const loanData = loanResponse?.data;
+        const customerData = customerResponse?.data;
+
+        if (!loanData) throw new Error("Loan scheme not found.");
+        
+        if (!customerData?.customerId) 
+          throw new Error("Customer information is not available. Please login again.");
+
+        setLoan(loanData);
+        setCustomer(customerData);
+
+        setLoanAmount(loanData.loanAmount || "");
+        setLoanTenure(loanData.loanTenure || "");
+
+        const accountResponse = await getAccountsByCustomerId( customerData.customerId );
+          // const accountResponse = await getAccountIdsByCustomerIdAndType("Savings");
+          const accountData = Array.isArray(accountResponse?.data)? accountResponse.data : [];
+
+          const eligibleAccounts = accountData.filter((account) => {
+              const type = String(account?.accountType || "").toUpperCase();
+              const status = String(account?.status || "").toUpperCase();
+              return type !== "LOAN" && status === "A";
+          });
+
+          setAccounts(eligibleAccounts);
+          if (eligibleAccounts.length === 0) 
+          setError("You do not have an active savings/current account available for loan disbursement.");
+         
+      } catch (e) {
+        console.error("Loan application loading error:", e);
+        setError(
+          e.response?.data?.message ||
+            (typeof e.response?.data === "string" ? e.response.data : null) ||
+            e.message ||
+            "Unable to prepare the loan application."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (loanId) loadData();
+  }, [loanId]);
     const preview = useMemo(() => {
         if (!loan || !loanAmount || !loanTenure) return null;
         const amount = Number(loanAmount);
         const months = Number(loanTenure) * 12;
         const rate = Number(loan.interestRate);
-        if (!amount || !months || !rate) return null;
-        const r = rate / 1200;
-        const f = Math.pow(1 + r, months);
-        const exactEmi = (amount * r * f) / (f - 1);
+        if (!amount || !months || !rate || rate<0) return null;
+        const monthlyRate = rate / 1200;
+        const f = Math.pow(1 + monthlyRate, months);
+        const exactEmi = (amount * monthlyRate * f) / (f - 1);
         const emi = Math.round(exactEmi);
         const total = emi * months;
         return { months, emi, interest: total - amount, total };
@@ -64,64 +91,319 @@ const LoanApplication = () => {
     const submit = async (e) => {
         e.preventDefault();
         setError(""); setMessage("");
-        if (!accountNumber) return setError("Select the account to link with this loan.");
-        if (Number(loanAmount) < 100000) return setError("Minimum loan amount is ₹1,00,000.");
-        setSaving(true);
-        try {
-            const response = await applyForLoan({
-                loanId:loan.loanId,
-                customerId: customer.customerId,
-                accountNumber: Number(accountNumber),
-                savingsAccountNumber:Number(accountNumber),
-                loanAmount: Number(loanAmount),
-                loanTenure: Number(loanTenure),
-            });
-           
-            setMessage(`Application ${response.data.customerLoanId} submitted successfully.`);
-            setTimeout(() => navigate("/loan-applications"), 900);
-        } catch (e) {
-            setError(e.response?.data?.message || "Unable to submit the application.");
-        } finally { setSaving(false); }
-    };
+        if (!customer?.customerId) {
+      setError("Customer information is not available. Please login again.");
+      return;}
 
-    if (loading) return <div style={loanStyles.page}>Preparing application...</div>;
-    if (!loan) return <div style={loanStyles.page}><Container><div style={loanStyles.card}>Loan scheme not found.</div></Container></div>;
-
+    if (!loanId) {
+      setError("Loan scheme was not selected.");
+      return;
+    }
+      
+          const amount = Number(loanAmount);
+          const tenure = Number(loanTenure);
+          const savingsAccount = Number(savingsAccountNumber);
+      
+          if (!amount || amount < 100000) {
+            setError("Minimum loan amount is ₹1,00,000.");
+            return;
+          }
+      
+          if (!tenure || tenure <= 0) {
+            setError("Loan tenure should be greater than zero.");
+            return;
+          }
+      
+          if (!savingsAccount) {
+            setError("Please select an account to receive the approved loan amount.");
+            return;
+          }
+      
+          const selectedAccount = accounts.find(
+            (acc) => Number(acc.accountNumber) === savingsAccount
+          );
+      
+          if (!selectedAccount) {
+            setError("Please select a valid active savings/current account.");
+            return;
+          }
+      
+          try {
+            setSaving(true);
+      
+            const payload = {
+              loanId,
+              customerId: Number(customer.customerId),
+              loanAmount: amount,
+              loanTenure: tenure,
+              savingsAccountNumber: savingsAccount,
+            };
+      
+            const response = await applyForLoan(payload);
+            const applicationId = response.data?.applicationId;
+      
+            setMessage(
+              applicationId
+                ? `Application ${applicationId} submitted successfully.`
+                : "Loan application submitted successfully."
+            );
+      
+            setTimeout(() => {
+              navigate("/loan-applications");
+            }, 1000);
+          } catch (e) {
+            console.error("Loan application submission error:", e);
+            setError(
+              e.response?.data?.message || "Unable to submit the application. May You have Already Applied For Loan" ||
+                (typeof e.response?.data === "string" ? e.response.data : null) ||
+                e.message
+               
+            );
+          } finally {
+            setSaving(false);
+          }
+        };
+    
+     if (loading) {
     return (
-        <div style={loanStyles.page}>
-            <div style={layoutStyles.dashboardHeader}><Container><div style={layoutStyles.dashboardHeaderRow}><div style={layoutStyles.dashboardBrandRow}><img src={logo} alt="FinCore Bank" style={layoutStyles.dashboardLogo} /><div><h2 style={layoutStyles.dashboardBrandTitle}>FinCore Bank</h2><small style={layoutStyles.dashboardBrandSubtitle}>Customer • Loan Application</small></div></div></div></Container></div>
-            <Container style={{ paddingTop: "28px" }}>
-                <div style={loanStyles.backRow}>
-                    <button
-                        type="button"
-                        onClick={() => navigate("/customer-menu")}
-                        style={loanStyles.backButton}
-                    >
-                        <span style={{ fontSize: "20px", lineHeight: "1", marginTop: "-2px" }}>‹</span>
-                        <span>Return Back</span>
-                    </button>
-                </div>
-                <div style={{ ...loanStyles.header, marginTop: "20px" }}><div><div style={commonStyles.eyebrow}>CUSTOMER PORTAL • APPLY</div><h1 style={loanStyles.title}>Apply for {loan.loanId}</h1><p style={loanStyles.subtitle}>Choose your linked account and submit the application for bank review.</p></div></div>
-                {error && <div style={{ ...loanStyles.alert, background: "#FEF2F2", color: "#B91C1C", border: "1px solid #FECACA" }}>{error}</div>}
-                {message && <div style={{ ...loanStyles.alert, background: "#ECFDF5", color: "#047857", border: "1px solid #A7F3D0" }}>{message}</div>}
-                <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.4fr) minmax(280px,.8fr)", gap: "22px" }}>
-                    <div style={loanStyles.card}>
-                        <form onSubmit={submit}>
-                            <div style={loanStyles.field}><label style={loanStyles.label}>Customer</label><input style={{ ...loanStyles.input, background: "#F8FAFC" }} value={`${customer?.customerName || ""} • ${customer?.customerId || ""}`} readOnly /></div>
-                            <div style={loanStyles.field}><label style={loanStyles.label}>Loan Scheme</label><input style={{ ...loanStyles.input, background: "#F8FAFC" }} value={`${loan.loanId} • ${money(loan.loanAmount)}`} readOnly /></div>
-                            <div style={loanStyles.field}><label style={loanStyles.label}>Account to Link</label><select style={loanStyles.input} value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} required><option value="">Select account</option>{accounts.map((a) => <option key={a.accountNumber} value={a.accountNumber}>{a.accountNumber} • {a.accountType} • Balance {money(a.balance)}</option>)}</select></div>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                                <div style={loanStyles.field}><label style={loanStyles.label}>Requested Amount</label><input style={loanStyles.input} type="number" min="100000" value={loanAmount} onChange={(e) => setLoanAmount(e.target.value)} required /></div>
-                                <div style={loanStyles.field}><label style={loanStyles.label}>Tenure (Years)</label><input style={loanStyles.input} type="number" min="1" value={loanTenure} onChange={(e) => setLoanTenure(e.target.value)} required /></div>
-                            </div>
-                            <div style={loanStyles.buttonRow}><button style={loanStyles.primaryButton} disabled={saving}>{saving ? "Submitting..." : "Submit Loan Application"}</button><button type="button" style={loanStyles.secondaryButton} onClick={() => navigate("/loan-list")}>Cancel</button></div>
-                        </form>
-                    </div>
-                    <div style={loanStyles.card}><div style={commonStyles.eyebrow}>ESTIMATED TERMS</div><h2 style={{ ...commonStyles.sectionTitle, marginTop: "6px" }}>Repayment preview</h2><p style={commonStyles.sectionSubtitle}>Final values are calculated again by the bank backend.</p><div style={loanStyles.summaryGrid}>{preview && <><div style={loanStyles.summary}><div style={loanStyles.summaryLabel}>Interest</div><div style={loanStyles.summaryValue}>{loan.interestRate}%</div></div><div style={loanStyles.summary}><div style={loanStyles.summaryLabel}>Monthly EMI</div><div style={loanStyles.summaryValue}>{money(preview.emi)}</div></div><div style={loanStyles.summary}><div style={loanStyles.summaryLabel}>Total Interest</div><div style={loanStyles.summaryValue}>{money(preview.interest)}</div></div><div style={loanStyles.summary}><div style={loanStyles.summaryLabel}>Total Payable</div><div style={loanStyles.summaryValue}>{money(preview.total)}</div></div></>}</div></div>
-                </div>
-            </Container>
-        </div>
+      <div style={loanStyles.page}>
+        <Container style={{ paddingTop: 50, color: "#64748B" }}>
+          Preparing loan application...
+        </Container>
+      </div>
     );
+  }
+
+  if (!loan) {
+    return (
+      <div style={loanStyles.page}>
+        <Container style={{ paddingTop: 28 }}>
+          <div style={loanStyles.card}>Loan scheme not found.</div>
+        </Container>
+      </div>
+    );
+  }
+
+  return (
+    <div style={loanStyles.page}>
+      <div style={layoutStyles.dashboardHeader}>
+        <Container>
+          <div style={layoutStyles.dashboardHeaderRow}>
+            <div style={layoutStyles.dashboardBrandRow}>
+              <img
+                src={logo}
+                alt="FinCore Bank"
+                style={layoutStyles.dashboardLogo}
+              />
+              <div>
+                <h2 style={layoutStyles.dashboardBrandTitle}>FinCore Bank</h2>
+                <small style={layoutStyles.dashboardBrandSubtitle}>
+                  Customer • Loan Application
+                </small>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </div>
+
+      <Container style={{ paddingTop: 28 }}>
+        <div style={loanStyles.backRow}>
+          <button
+            type="button"
+            onClick={() => navigate("/loan-list")}
+            style={loanStyles.backButton}
+            disabled={saving}
+          >
+            ‹ <span>Return Back</span>
+          </button>
+        </div>
+
+        <div style={{ ...loanStyles.header, marginTop: 20 }}>
+          <div>
+            <div style={commonStyles.eyebrow}>
+              CUSTOMER PORTAL • LOAN APPLICATION
+            </div>
+            <h1 style={loanStyles.title}>Apply for {loan.loanId}</h1>
+            <p style={loanStyles.subtitle}>
+              Select an existing savings/current account for loan disbursement.
+              A separate loan payment account will be created only after approval.
+            </p>
+          </div>
+        </div>
+
+        {error && (
+          <div
+            style={{
+              ...loanStyles.alert,
+              background: "#FEF2F2",
+              color: "#B91C1C",
+              border: "1px solid #FECACA",
+              marginBottom: 18,
+            }}
+          >
+            {error}
+          </div>
+        )}
+
+        {message && (
+          <div
+            style={{
+              ...loanStyles.alert,
+              background: "#ECFDF5",
+              color: "#047857",
+              border: "1px solid #A7F3D0",
+              marginBottom: 18,
+            }}
+          >
+            ✓ {message}
+          </div>
+        )}
+
+        <div style={loanStyles.card}>
+          <h2 style={commonStyles.sectionTitle}>Loan details</h2>
+          <p style={commonStyles.sectionSubtitle}>
+            The approved loan amount will be credited to the selected existing
+            account. A separate LOAN account will be created for repayments after approval.
+          </p>
+
+          <form onSubmit={submit}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 18,
+              }}
+            >
+              <div style={loanStyles.field}>
+                <label style={loanStyles.label}>Loan Amount</label>
+                <input
+                  style={loanStyles.input}
+                  type="number"
+                  min="100000"
+                  step="1000"
+                  value={loanAmount}
+                  onChange={(e) => setLoanAmount(e.target.value)}
+                  disabled={saving}
+                  required
+                />
+                <small style={{ color: "#64748B" }}>Minimum ₹1,00,000</small>
+              </div>
+
+              <div style={loanStyles.field}>
+                <label style={loanStyles.label}>Loan Tenure (Years)</label>
+                <input
+                  style={loanStyles.input}
+                  type="number"
+                  min="1"
+                  value={loanTenure}
+                  onChange={(e) => setLoanTenure(e.target.value)}
+                  disabled={saving}
+                  required
+                />
+              </div>
+            </div>
+
+            <div style={{ ...loanStyles.field, marginTop: 18 }}>
+              <label style={loanStyles.label}>
+                Account for Loan Disbursement
+              </label>
+              <select
+                style={loanStyles.input}
+                value={savingsAccountNumber}
+                onChange={(e) => setSavingsAccountNumber(e.target.value)}
+                disabled={saving || accounts.length === 0}
+                required
+              >
+                <option value="">Select account</option>
+                {accounts.map((account) => (
+                  <option
+                    key={account.accountNumber}
+                    value={account.accountNumber}
+                  >
+                    A/C {account.accountNumber} • {account.accountType} •{" "}
+                    {money(account.balance)}
+                  </option>
+                ))}
+              </select>
+              <small style={{ color: "#64748B" }}>
+                This account receives the approved loan amount. The separate LOAN
+                payment account is created after approval.
+              </small>
+            </div>
+
+            {preview && (
+              <>
+                <div
+                  style={{
+                    marginTop: 26,
+                    paddingTop: 22,
+                    borderTop: "1px dashed #E2E8F0",
+                  }}
+                >
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: "14px",
+                      fontWeight: 800,
+                      color: "#64748B",
+                      textTransform: "uppercase",
+                      letterSpacing: ".05em",
+                    }}
+                  >
+                    Loan Summary
+                  </h3>
+                </div>
+
+                <div
+                  style={{
+                    ...loanStyles.metricGrid,
+                    marginTop: 14,
+                  }}
+                >
+                  {[
+                    ["Interest Rate", `${loan.interestRate}%`],
+                    ["Monthly EMI", money(preview.emi)],
+                    ["Total Interest", money(preview.interest)],
+                    ["Total Cost", money(preview.total)],
+                  ].map(([label, value]) => (
+                    <div style={loanStyles.metric} key={label}>
+                      <div style={loanStyles.metricLabel}>{label}</div>
+                      <div style={loanStyles.metricValue}>{value}</div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            <div
+              style={{
+                marginTop: 24,
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 12,
+              }}
+            >
+              <button
+                type="button"
+                style={loanStyles.secondaryButton}
+                onClick={() => navigate("/loan-list")}
+                disabled={saving}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                style={loanStyles.primaryButton}
+                disabled={saving || accounts.length === 0}
+              >
+                {saving ? "Submitting..." : "Submit Application"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </Container>
+    </div>
+  );
 };
 
 export default LoanApplication;

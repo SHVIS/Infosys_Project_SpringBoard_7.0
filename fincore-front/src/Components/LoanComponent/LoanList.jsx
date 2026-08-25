@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-
-import {
-    deleteLoanById,
-    getActiveLoans,
-    getLoans
-} from "../../Services/LoanService";
-
+import {deleteLoanById,getActiveLoans,getLoans} from "../../Services/LoanService";
 import { getRole } from "../../utils/storage";
 import logo from "../../assets/logo.png";
 import loanStyles from "../../styles/loanStyles";
+import ConfirmDialog from "../Common/ConfirmDialog";
+import Modal from "../Common/Modal";
 
 const money = (value) =>
     `₹${Number(value || 0).toLocaleString("en-IN", {
@@ -41,6 +37,8 @@ const LoanList = () => {
     const [loans, setLoans] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [deleteTarget, setDeleteTarget] = useState(null);
+    const [errorModal, setErrorModal] = useState({ open: false, message: "" });
 
     const returnBack = () =>
         navigate(isAdmin ? "/admin-menu" : "/customer-menu");
@@ -67,22 +65,24 @@ const LoanList = () => {
 
     useEffect(() => {
         loadLoans();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, []);
 
-    const handleDelete = async (loanId) => {
-        if (!window.confirm(`Are you sure you want to delete loan scheme ${loanId}?`)) {
-            return;
-        }
+    const handleDelete = (loanId) => setDeleteTarget(loanId);
 
+    const confirmDelete = async () => {
+        const loanId = deleteTarget;
+        setDeleteTarget(null);
         try {
             await deleteLoanById(loanId);
             await loadLoans();
         } catch (e) {
-            setError(
-                e?.response?.data?.message ||
-                "Unable to delete loan scheme."
-            );
+            setErrorModal({
+                open: true,
+                message:
+                    e?.response?.data?.message ||
+                    "Unable to delete loan scheme."
+            });
         }
     };
 
@@ -91,9 +91,6 @@ const LoanList = () => {
 
     const handleEdit = (loanId) =>
         navigate(`/loan-edit/${loanId}`);
-
-    const handleApplications = (loanId) =>
-        navigate(`/loan-applications/${loanId}`);
 
     const activeCount = loans.filter(
         (loan) =>
@@ -104,7 +101,7 @@ const LoanList = () => {
     return (
         <div style={loanStyles.page}>
 
-            {/* Header */}
+            
             <div
                 style={{
                     background: "#FFFFFF",
@@ -178,7 +175,7 @@ const LoanList = () => {
                     </button>
                 </div>
 
-                {/* Page heading */}
+                
                 <div style={loanStyles.header}>
                     <div>
                         <div
@@ -225,7 +222,6 @@ const LoanList = () => {
                     </div>
                 </div>
 
-                {/* Error */}
                 {error && (
                     <div
                         style={{
@@ -239,7 +235,7 @@ const LoanList = () => {
                     </div>
                 )}
 
-                {/* Admin metrics */}
+             
                 {isAdmin && (
                     <div style={loanStyles.metricGrid}>
                         <div style={loanStyles.metric}>
@@ -271,14 +267,14 @@ const LoanList = () => {
                     </div>
                 )}
 
-                {/* Loading */}
+                
                 {loading && (
                     <div style={loanStyles.card}>
                         Loading loan schemes...
                     </div>
                 )}
 
-                {/* Empty */}
+               
                 {!loading && loans.length === 0 && (
                     <div style={loanStyles.card}>
                         <div
@@ -305,7 +301,7 @@ const LoanList = () => {
                     </div>
                 )}
 
-                {/* Loan cards */}
+                
                 {!loading && loans.length > 0 && (
                     <div style={loanStyles.grid}>
                         {loans.map((loan) => {
@@ -414,15 +410,7 @@ const LoanList = () => {
                                                     Delete
                                                 </button>
 
-                                                <button
-                                                    type="button"
-                                                    style={loanStyles.secondaryButton}
-                                                    onClick={() =>
-                                                        handleApplications(loanId)
-                                                    }
-                                                >
-                                                    Applications
-                                                </button>
+                                                
                                             </>
                                         ) : (
                                             <button
@@ -442,6 +430,25 @@ const LoanList = () => {
                     </div>
                 )}
             </Container>
+
+            <ConfirmDialog
+                open={deleteTarget !== null}
+                title="Delete Loan Scheme"
+                message={`Are you sure you want to delete loan scheme ${deleteTarget}?`}
+                confirmLabel="Delete"
+                cancelLabel="Cancel"
+                type="error"
+                onConfirm={confirmDelete}
+                onCancel={() => setDeleteTarget(null)}
+            />
+
+            <Modal
+                open={errorModal.open}
+                title="Notice"
+                message={errorModal.message}
+                type="error"
+                onClose={() => setErrorModal({ open: false, message: "" })}
+            />
         </div>
     );
 };

@@ -31,6 +31,42 @@ public class CustomerLoan {
     private Double outstandingAmount;
     private String reviewedDate;
     private String rejectionReason;
+    private String closedDate;
+    
+    public CustomerLoan(String customerLoanId, Long customerId, String loanId, Double loanAmount, Integer paidTenure,
+			Integer totalTenure, Double interestRate, Double emiPayable, Double totalInterestPayable, Double totalCost,
+			Double amountPaidTillDate, String loanDate, String completeDate, String status, Long savingsAccountNumber,
+			Long paymentAccountNumber, Long accountNumber, Double outstandingAmount, String reviewedDate,
+			String rejectionReason, String closedDate) {
+		super();
+		this.customerLoanId = customerLoanId;
+		this.customerId = customerId;
+		this.loanId = loanId;
+		this.loanAmount = loanAmount;
+		this.paidTenure = paidTenure;
+		this.totalTenure = totalTenure;
+		this.interestRate = interestRate;
+		this.emiPayable = emiPayable;
+		this.totalInterestPayable = totalInterestPayable;
+		this.totalCost = totalCost;
+		this.amountPaidTillDate = amountPaidTillDate;
+		this.loanDate = loanDate;
+		this.completeDate = completeDate;
+		this.status = status;
+		this.savingsAccountNumber = savingsAccountNumber;
+		this.paymentAccountNumber = paymentAccountNumber;
+		this.accountNumber = accountNumber;
+		this.outstandingAmount = outstandingAmount;
+		this.reviewedDate = reviewedDate;
+		this.rejectionReason = rejectionReason;
+		this.closedDate = closedDate;
+	}
+	public String getClosedDate() {
+		return closedDate;
+	}
+	public void setClosedDate(String closedDate) {
+		this.closedDate = closedDate;
+	}
 	public CustomerLoan() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -153,33 +189,6 @@ public class CustomerLoan {
 		return rejectionReason;
 	}
 	public void setRejectionReason(String rejectionReason) {
-		this.rejectionReason = rejectionReason;
-	}
-	public CustomerLoan(String customerLoanId, Long customerId, String loanId, Double loanAmount, Integer paidTenure,
-			Integer totalTenure, Double interestRate, Double emiPayable, Double totalInterestPayable, Double totalCost,
-			Double amountPaidTillDate, String loanDate, String completeDate, String status, Long savingsAccountNumber,
-			Long paymentAccountNumber, Long accountNumber, Double outstandingAmount, String reviewedDate,
-			String rejectionReason) {
-		super();
-		this.customerLoanId = customerLoanId;
-		this.customerId = customerId;
-		this.loanId = loanId;
-		this.loanAmount = loanAmount;
-		this.paidTenure = paidTenure;
-		this.totalTenure = totalTenure;
-		this.interestRate = interestRate;
-		this.emiPayable = emiPayable;
-		this.totalInterestPayable = totalInterestPayable;
-		this.totalCost = totalCost;
-		this.amountPaidTillDate = amountPaidTillDate;
-		this.loanDate = loanDate;
-		this.completeDate = completeDate;
-		this.status = status;
-		this.savingsAccountNumber = savingsAccountNumber;
-		this.paymentAccountNumber = paymentAccountNumber;
-		this.accountNumber = accountNumber;
-		this.outstandingAmount = outstandingAmount;
-		this.reviewedDate = reviewedDate;
 		this.rejectionReason = rejectionReason;
 	}
 }

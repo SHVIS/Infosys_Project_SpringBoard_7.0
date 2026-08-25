@@ -17,10 +17,7 @@ public class CustomerService {
 	
 	public Long generateCustomerId() {
 		Long value=customerDao.getMaxCustomerId();
-		 if(value==null)
-			 value=1000001L;
-		 else
-			 value=value+1;
+		 value=(value==null) ? 1000001L : value+1;
 		
 		 return value;
 	}
@@ -35,10 +32,8 @@ public class CustomerService {
 	public Boolean checkCustomer() {
 		String username=service.getUserId();
 		Customer customer=customerDao.getCustomerByUsername(username);
-		if(customer==null || customer.getStatus().equalsIgnoreCase("R"))
-			return true;
-		else
-			return false;
+		return(customer==null || customer.getStatus().equalsIgnoreCase("R"))
+		? true : false;
 	}
 	public Customer getCustomerByUsername() {
 		String username=service.getUserId();

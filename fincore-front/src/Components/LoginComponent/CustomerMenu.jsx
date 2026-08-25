@@ -151,10 +151,10 @@ function CustomerMenu() {
 
                             <NavDropdown title=" Loan" id="loan-dropdown">
                                 <NavDropdown.Item onClick={() => goTo("/loan-list")}>
-                                    Loan List
+                                 Loans Offers List
                                 </NavDropdown.Item>
                                 <NavDropdown.Item onClick={() => goTo("/loan-applications")}>
-                                    My Loan Applications
+                                 Personal Loans
                                 </NavDropdown.Item>
                             </NavDropdown>
 

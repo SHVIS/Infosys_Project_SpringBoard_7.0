@@ -77,7 +77,11 @@ public class CustomerLoanController {
     @GetMapping("/loan-repayment-id")
     public String generateRepaymentId() { return service.generateRepaymentId(); }
 	
-	
+
+	@GetMapping("/cust-loan-cust/{id}")
+	public CustomerLoan checkPaymentStatus(@PathVariable String id) {
+			return service.checkPaymentStatus(id);
+	}
 	
 	
 /*	ACTAUL FUNCTION TO BE IN THIS FILE RE-DEVELOPMENT OF LOAN APPLICATION
@@ -116,10 +120,6 @@ public class CustomerLoanController {
 	@GetMapping("/cust-loan/{status}")
 	public List<CustomerLoan> getCustomerLoanByStatus(@PathVariable String status) {
 	return customerLoanDao.getCustomerLoanByStatus (status);
-	}
-	@GetMapping("/cust-loan-cust/{id}")
-	public CustomerLoan checkPaymentStatus(@PathVariable String id) {
-			return service.checkPaymentStatus(id);
 	}
 	*/
 }

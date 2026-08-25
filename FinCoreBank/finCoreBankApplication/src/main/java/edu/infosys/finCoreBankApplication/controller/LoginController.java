@@ -41,10 +41,6 @@ public class LoginController {
 		user.setPassword(encodedPassword);
 		service.saveUser(user);
 	}
-//	@PostMapping("/login")
-//	public void registerNewUser(@RequestBody String body) {
-//	    System.out.println(body);
-//	}
 	
 	@GetMapping("/login/{userId}/{password}")
 	public String validateUser(@PathVariable String userId,@PathVariable String password) {
