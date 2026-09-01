@@ -164,73 +164,90 @@ const LoanApplication = () => {
           }
         };
     
-     if (loading) {
+    if (loading) {
     return (
       <div style={loanStyles.page}>
+        {" "}
         <Container style={{ paddingTop: 50, color: "#64748B" }}>
-          Preparing loan application...
-        </Container>
+          {" "}
+          Preparing loan application...{" "}
+        </Container>{" "}
       </div>
     );
   }
-
   if (!loan) {
     return (
       <div style={loanStyles.page}>
+        {" "}
         <Container style={{ paddingTop: 28 }}>
-          <div style={loanStyles.card}>Loan scheme not found.</div>
-        </Container>
+          {" "}
+          <div style={loanStyles.card}> Loan scheme not found. </div>{" "}
+        </Container>{" "}
       </div>
     );
   }
-
   return (
     <div style={loanStyles.page}>
+      {" "}
       <div style={layoutStyles.dashboardHeader}>
+        {" "}
         <Container>
+          {" "}
           <div style={layoutStyles.dashboardHeaderRow}>
+            {" "}
             <div style={layoutStyles.dashboardBrandRow}>
+              {" "}
               <img
                 src={logo}
                 alt="FinCore Bank"
                 style={layoutStyles.dashboardLogo}
-              />
+              />{" "}
               <div>
-                <h2 style={layoutStyles.dashboardBrandTitle}>FinCore Bank</h2>
+                {" "}
+                <h2 style={layoutStyles.dashboardBrandTitle}>
+                  {" "}
+                  FinCore Bank{" "}
+                </h2>{" "}
                 <small style={layoutStyles.dashboardBrandSubtitle}>
-                  Customer • Loan Application
-                </small>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </div>
-
+                  {" "}
+                  Customer • Loan Application{" "}
+                </small>{" "}
+              </div>{" "}
+            </div>{" "}
+          </div>{" "}
+        </Container>{" "}
+      </div>{" "}
       <Container style={{ paddingTop: 28 }}>
+        {" "}
         <div style={loanStyles.backRow}>
+          {" "}
           <button
             type="button"
             onClick={() => navigate("/loan-list")}
             style={loanStyles.backButton}
             disabled={saving}
           >
-            ‹ <span>Return Back</span>
-          </button>
-        </div>
-
+            {" "}
+            ‹ <span>Return Back</span>{" "}
+          </button>{" "}
+        </div>{" "}
         <div style={{ ...loanStyles.header, marginTop: 20 }}>
+          {" "}
           <div>
+            {" "}
             <div style={commonStyles.eyebrow}>
-              CUSTOMER PORTAL • LOAN APPLICATION
-            </div>
-            <h1 style={loanStyles.title}>Apply for {loan.loanId}</h1>
+              {" "}
+              CUSTOMER PORTAL • LOAN APPLICATION{" "}
+            </div>{" "}
+            <h1 style={loanStyles.title}> Apply for {loan.loanId} </h1>{" "}
             <p style={loanStyles.subtitle}>
+              {" "}
               Select an existing savings/current account for loan disbursement.
-              A separate loan payment account will be created only after approval.
-            </p>
-          </div>
-        </div>
-
+              A separate loan payment account will be created only after
+              approval.{" "}
+            </p>{" "}
+          </div>{" "}
+        </div>{" "}
         {error && (
           <div
             style={{
@@ -241,10 +258,10 @@ const LoanApplication = () => {
               marginBottom: 18,
             }}
           >
-            {error}
+            {" "}
+            {error}{" "}
           </div>
-        )}
-
+        )}{" "}
         {message && (
           <div
             style={{
@@ -255,18 +272,21 @@ const LoanApplication = () => {
               marginBottom: 18,
             }}
           >
-            ✓ {message}
+            {" "}
+            ✓ {message}{" "}
           </div>
-        )}
-
+        )}{" "}
         <div style={loanStyles.card}>
-          <h2 style={commonStyles.sectionTitle}>Loan details</h2>
+          {" "}
+          <h2 style={commonStyles.sectionTitle}> Loan details </h2>{" "}
           <p style={commonStyles.sectionSubtitle}>
+            {" "}
             The approved loan amount will be credited to the selected existing
-            account. A separate LOAN account will be created for repayments after approval.
-          </p>
-
+            account. A separate LOAN account will be created for repayments
+            after approval.{" "}
+          </p>{" "}
           <form onSubmit={submit}>
+            {" "}
             <div
               style={{
                 display: "grid",
@@ -274,8 +294,10 @@ const LoanApplication = () => {
                 gap: 18,
               }}
             >
+              {" "}
               <div style={loanStyles.field}>
-                <label style={loanStyles.label}>Loan Amount</label>
+                {" "}
+                <label style={loanStyles.label}> Loan Amount </label>{" "}
                 <input
                   style={loanStyles.input}
                   type="number"
@@ -285,28 +307,41 @@ const LoanApplication = () => {
                   onChange={(e) => setLoanAmount(e.target.value)}
                   disabled={saving}
                   required
-                />
-                <small style={{ color: "#64748B" }}>Minimum ₹1,00,000</small>
-              </div>
-
+                />{" "}
+                <small style={{ color: "#64748B" }}>
+                  {" "}
+                  Minimum ₹1,00,000{" "}
+                </small>{" "}
+              </div>{" "}
               <div style={loanStyles.field}>
-                <label style={loanStyles.label}>Loan Tenure (Years)</label>
+                {" "}
+                <label style={loanStyles.label}>
+                  {" "}
+                  Loan Tenure (Years){" "}
+                </label>{" "}
                 <input
                   style={loanStyles.input}
                   type="number"
-                  min="1"
+                  min="0.2"
+                  step="0.5"
                   value={loanTenure}
                   onChange={(e) => setLoanTenure(e.target.value)}
                   disabled={saving}
                   required
-                />
-              </div>
-            </div>
-
+                  readOnly
+                />{" "}
+                <small style={{ color: "#64748B" }}>
+                  {" "}
+                  Minimum 0.5 years (6 months){" "}
+                </small>{" "}
+              </div>{" "}
+            </div>{" "}
             <div style={{ ...loanStyles.field, marginTop: 18 }}>
+              {" "}
               <label style={loanStyles.label}>
-                Account for Loan Disbursement
-              </label>
+                {" "}
+                Account for Loan Disbursement{" "}
+              </label>{" "}
               <select
                 style={loanStyles.input}
                 value={savingsAccountNumber}
@@ -314,25 +349,28 @@ const LoanApplication = () => {
                 disabled={saving || accounts.length === 0}
                 required
               >
-                <option value="">Select account</option>
+                {" "}
+                <option value=""> Select account </option>{" "}
                 {accounts.map((account) => (
                   <option
                     key={account.accountNumber}
                     value={account.accountNumber}
                   >
+                    {" "}
                     A/C {account.accountNumber} • {account.accountType} •{" "}
-                    {money(account.balance)}
+                    {money(account.balance)}{" "}
                   </option>
-                ))}
-              </select>
+                ))}{" "}
+              </select>{" "}
               <small style={{ color: "#64748B" }}>
-                This account receives the approved loan amount. The separate LOAN
-                payment account is created after approval.
-              </small>
-            </div>
-
+                {" "}
+                This account receives the approved loan amount. The separate
+                LOAN payment account is created after approval.{" "}
+              </small>{" "}
+            </div>{" "}
             {preview && (
               <>
+                {" "}
                 <div
                   style={{
                     marginTop: 26,
@@ -340,6 +378,7 @@ const LoanApplication = () => {
                     borderTop: "1px dashed #E2E8F0",
                   }}
                 >
+                  {" "}
                   <h3
                     style={{
                       margin: 0,
@@ -350,31 +389,28 @@ const LoanApplication = () => {
                       letterSpacing: ".05em",
                     }}
                   >
-                    Loan Summary
-                  </h3>
-                </div>
-
-                <div
-                  style={{
-                    ...loanStyles.metricGrid,
-                    marginTop: 14,
-                  }}
-                >
+                    {" "}
+                    Loan Summary{" "}
+                  </h3>{" "}
+                </div>{" "}
+                <div style={{ ...loanStyles.metricGrid, marginTop: 14 }}>
+                  {" "}
                   {[
                     ["Interest Rate", `${loan.interestRate}%`],
+                    ["Total Tenure", `${preview.months} months`],
                     ["Monthly EMI", money(preview.emi)],
                     ["Total Interest", money(preview.interest)],
                     ["Total Cost", money(preview.total)],
                   ].map(([label, value]) => (
                     <div style={loanStyles.metric} key={label}>
-                      <div style={loanStyles.metricLabel}>{label}</div>
-                      <div style={loanStyles.metricValue}>{value}</div>
+                      {" "}
+                      <div style={loanStyles.metricLabel}> {label} </div>{" "}
+                      <div style={loanStyles.metricValue}> {value} </div>{" "}
                     </div>
-                  ))}
-                </div>
+                  ))}{" "}
+                </div>{" "}
               </>
-            )}
-
+            )}{" "}
             <div
               style={{
                 marginTop: 24,
@@ -383,25 +419,28 @@ const LoanApplication = () => {
                 gap: 12,
               }}
             >
+              {" "}
               <button
                 type="button"
                 style={loanStyles.secondaryButton}
                 onClick={() => navigate("/loan-list")}
                 disabled={saving}
               >
-                Cancel
-              </button>
+                {" "}
+                Cancel{" "}
+              </button>{" "}
               <button
                 type="submit"
                 style={loanStyles.primaryButton}
                 disabled={saving || accounts.length === 0}
               >
-                {saving ? "Submitting..." : "Submit Application"}
-              </button>
-            </div>
-          </form>
-        </div>
-      </Container>
+                {" "}
+                {saving ? "Submitting..." : "Submit Application"}{" "}
+              </button>{" "}
+            </div>{" "}
+          </form>{" "}
+        </div>{" "}
+      </Container>{" "}
     </div>
   );
 };

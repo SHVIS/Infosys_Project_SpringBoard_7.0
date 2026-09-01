@@ -183,7 +183,7 @@ const LoanRepayment = () => {
     outstanding > 0 && emi > 0 && outstanding <= emi;
 
   const showRepaymentForm =
-    outstanding > 0 && application.applicationStatus === "APPROVED";
+    outstanding > 0 && application.status === "APPROVED";
 
   const loanAccountNumber =
     application.paymentAccountNumber || application.accountNumber;

@@ -13,7 +13,7 @@ public class CustomerLoan {
 	private String loanId;
 	private Double loanAmount;
 	private Integer paidTenure;
-	private Integer totalTenure;
+	private Double totalTenure;
 	private Double interestRate;
 	private Double emiPayable;
 	private Double totalInterestPayable;
@@ -34,7 +34,7 @@ public class CustomerLoan {
     private String closedDate;
     
     public CustomerLoan(String customerLoanId, Long customerId, String loanId, Double loanAmount, Integer paidTenure,
-			Integer totalTenure, Double interestRate, Double emiPayable, Double totalInterestPayable, Double totalCost,
+    		Double totalTenure, Double interestRate, Double emiPayable, Double totalInterestPayable, Double totalCost,
 			Double amountPaidTillDate, String loanDate, String completeDate, String status, Long savingsAccountNumber,
 			Long paymentAccountNumber, Long accountNumber, Double outstandingAmount, String reviewedDate,
 			String rejectionReason, String closedDate) {
@@ -101,10 +101,10 @@ public class CustomerLoan {
 	public void setPaidTenure(Integer paidTenure) {
 		this.paidTenure = paidTenure;
 	}
-	public Integer getTotalTenure() {
+	public Double getTotalTenure() {
 		return totalTenure;
 	}
-	public void setTotalTenure(Integer totalTenure) {
+	public void setTotalTenure(Double totalTenure) {
 		this.totalTenure = totalTenure;
 	}
 	public Double getInterestRate() {

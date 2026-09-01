@@ -31,11 +31,11 @@ public class LoanService {
         Double amount = loan.getLoanAmount();
 
         // Minimum loan amount check
-        if (amount < 100000)
+        if (amount==null || amount < 100000)
             throw new RuntimeException("Minimum loan amount should be 100000");
 
        
-        Integer months = loan.getLoanTenure() * 12; // years --> months tenure
+        Integer months = (int) (loan.getLoanTenure() * 12); // years --> months tenure
         Double monthlyRate = loan.getInterestRate() / (12 * 100);  // Monthly interest rate
 
         // EMI Formula: (P × R × (1+R)^N ) / ((1+R)^N - 1)
@@ -44,7 +44,9 @@ public class LoanService {
         		
         Double totalCost = emi * months; // Total amount paid
         Double totalInterest = totalCost - amount; // Total interest paid
-
+        if (months <= 0) 
+                    throw new RuntimeException("Loan tenure must be at least 1 month");
+                
         // Set calculated values
         loan.setTotalTenure(months);
         loan.setEmiPayable(emi);

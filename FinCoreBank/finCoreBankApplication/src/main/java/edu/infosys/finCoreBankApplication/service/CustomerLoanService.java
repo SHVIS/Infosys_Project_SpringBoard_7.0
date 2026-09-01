@@ -56,7 +56,7 @@ public class CustomerLoanService {
 		 String newId="CL"+value;
 		  return newId;
 	}
-	public CustomerLoan setAppliedCustomerLoan(CustomerLoan customerLoan) {
+	/* public CustomerLoan setAppliedCustomerLoan(CustomerLoan customerLoan) {
 		   Customer customer=service.getCustomerByUsername();
 		   Loan loan=loanDao.getLoanById(customerLoan.getLoanId());
 		   Integer totalTenure=loan.getTotalTenure();
@@ -73,9 +73,9 @@ public class CustomerLoanService {
 		   return customerLoan;
 	   }
 	
-//	public List<CustomerLoan> getCustomerLoanByCustomerId() {
-//	Customer customer=service.getCustomerByUsername();
-//	return customerLoanDao.getCustomerLoanByCustomerId(customer.getCustomerId());}
+	public List<CustomerLoan> getCustomerLoanByCustomerId() {
+	Customer customer=service.getCustomerByUsername();
+	return customerLoanDao.getCustomerLoanByCustomerId(customer.getCustomerId());}
 	
 	public CustomerLoan checkPaymentStatus(String customerLoanId) {
 		CustomerLoan customerLoan=customerLoanDao.getLoanById(customerLoanId);
@@ -83,7 +83,7 @@ public class CustomerLoanService {
 			? null : customerLoan;
 	}
 
-//	--------------------------Customer Loan Service Sir function End
+	--------------------------Customer Loan Service Sir function End */
 	
 	
 	
@@ -131,14 +131,14 @@ public class CustomerLoanService {
                 ? scheme.getLoanAmount() : customerLoanApplication.getLoanAmount();
         if (amount < 100000) throw new RuntimeException("Minimum loan amount should be 100000");
 
-        int years = customerLoanApplication.getTotalTenure() == null || customerLoanApplication.getTotalTenure() <= 0
+        double years = customerLoanApplication.getTotalTenure() == null || customerLoanApplication.getTotalTenure() <= 0
                 ? scheme.getLoanTenure() : customerLoanApplication.getTotalTenure();
         if (years <= 0) throw new RuntimeException("Loan tenure should be greater than zero");
 
         double rate = scheme.getInterestRate() == null ? 0 : scheme.getInterestRate();
         if (rate <= 0) throw new RuntimeException("Loan scheme has an invalid interest rate");
 
-        int months = years * 12;
+        double months =(years * 12);
         double monthlyRate = rate / 1200.0;
         double factor = Math.pow(1 + monthlyRate, months);
         double exactEmi = (amount * monthlyRate * factor) / (factor - 1);
@@ -269,7 +269,7 @@ if (emi <= 0) throw new RuntimeException("Loan EMI is not available");
         double amount;
         int paidTenures = customerLoanApplication.getPaidTenure() == null ? 0: customerLoanApplication.getPaidTenure();
 
-int totalTenures = customerLoanApplication.getTotalTenure() == null? 0: customerLoanApplication.getTotalTenure();
+double totalTenures = customerLoanApplication.getTotalTenure() == null? 0: customerLoanApplication.getTotalTenure();
 
 amount =(paidTenures + 1 >= totalTenures || outstanding <= emi + 10) ? outstanding:emi;
 

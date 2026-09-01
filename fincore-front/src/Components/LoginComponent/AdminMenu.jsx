@@ -197,13 +197,13 @@ const AdminMenu = () => {
                                     Customer Loan Applications
                                 </NavDropdown.Item>
 
-                                <NavDropdown.Item
+                                {/* <NavDropdown.Item
                                     onClick={() =>
                                         goTo("/loan-applications")
                                     }
                                 >
                                     Customer Loans
-                                </NavDropdown.Item>
+                                </NavDropdown.Item> */}
                             </NavDropdown>
 
                         </Nav>

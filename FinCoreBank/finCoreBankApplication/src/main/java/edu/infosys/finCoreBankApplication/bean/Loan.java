@@ -9,7 +9,7 @@ public class Loan {
 	
 	@Id
 	private String loanId;
-	private Integer loanTenure;
+	private Double loanTenure;
 	private Integer totalTenure;
 	private Double interestRate;
 	private Double emiPayable;
@@ -27,7 +27,7 @@ public class Loan {
 	}
 
 
-	public Loan(String loanId, Integer loanTenure, Integer totalTenure, Double interestRate, Double emiPayable,
+	public Loan(String loanId, Double loanTenure, Integer totalTenure, Double interestRate, Double emiPayable,
 			Double totalInterestPayable, Double totalCost, Double loanAmount, String loanStatus) {
 		super();
 		this.loanId = loanId;
@@ -46,9 +46,9 @@ public class Loan {
 
 	public void setLoanId(String loanId) {this.loanId = loanId;}
 
-	public Integer getLoanTenure() {return loanTenure;}
+	public Double getLoanTenure() {return loanTenure;}
 
-	public void setLoanTenure(Integer loanTenure) {this.loanTenure = loanTenure;}
+	public void setLoanTenure(Double loanTenure) {this.loanTenure = loanTenure;}
 
 	public Integer getTotalTenure() {return totalTenure;}
 

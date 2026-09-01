@@ -339,7 +339,7 @@ const LoanEntry = () => {
                                 <input
                                     style={loanStyles.input}
                                     type="number"
-                                    min="1"
+                                    min="0.5"
                                     value={form.loanTenure}
                                     onChange={(e) =>
                                         update(

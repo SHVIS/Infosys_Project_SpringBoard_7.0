@@ -181,9 +181,7 @@ const CustomerEntry = () => {
             {/* ================= MAIN ================= */}
             <main style={cs.entryMain}>
 
-                <div style={{ marginBottom: "22px" }}>
-                    <BackButton onClick={returnBack} />
-                </div>
+               
 
                 <div style={cs.entryIntro}>
                     <div style={cs.entryEyebrow}>CUSTOMER MANAGEMENT</div>
@@ -241,7 +239,9 @@ const CustomerEntry = () => {
 
                     {/* ================= RIGHT FORM ================= */}
                     <div style={cs.entryFormCard}>
-
+                        <div style={{ marginBottom: "22px" }}>
+                             <BackButton onClick={returnBack} />
+                         </div>
                         <div style={cs.entryFormHeader}>
                             <div>
                                 <div style={cs.entryFormEyebrow}>CUSTOMER DETAILS</div>

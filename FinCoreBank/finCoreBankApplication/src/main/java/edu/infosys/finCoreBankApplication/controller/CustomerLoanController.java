@@ -78,14 +78,15 @@ public class CustomerLoanController {
     public String generateRepaymentId() { return service.generateRepaymentId(); }
 	
 
-	@GetMapping("/cust-loan-cust/{id}")
-	public CustomerLoan checkPaymentStatus(@PathVariable String id) {
-			return service.checkPaymentStatus(id);
-	}
+	
 	
 	
 /*	ACTAUL FUNCTION TO BE IN THIS FILE RE-DEVELOPMENT OF LOAN APPLICATION
  * 
+ * @GetMapping("/cust-loan-cust/{id}")
+	public CustomerLoan checkPaymentStatus(@PathVariable String id) {
+			return service.checkPaymentStatus(id);
+	}
 	@GetMapping("/cust-loan/{id}")
 	public CustomerLoan getLoanById (@PathVariable String id) {
 	return customerLoanDao.getLoanById(id);
