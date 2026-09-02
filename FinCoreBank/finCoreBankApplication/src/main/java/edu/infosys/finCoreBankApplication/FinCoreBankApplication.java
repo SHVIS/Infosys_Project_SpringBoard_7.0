@@ -10,10 +10,10 @@ public class FinCoreBankApplication {
 		SpringApplication.run(FinCoreBankApplication.class, args);
 	}
 /*
- * userId:Lotus Pass:Mango
- * userId:pine Pass:Apple ,Role Customer
+userId:Lotus Pass:Mango
+userId:pine Pass:Apple ,Role Customer
 User Id: Rose, Password: Apple, Role: Customer
- * userId:cherry Pass:cakes ,Role Customer
+userId:cherry Pass:cakes ,Role Customer
 User Id: Jasmine, Password: Orange, Role: Customer
 
 User Id: Jenia, Password: Pineapple, Role: Customer
