@@ -108,6 +108,7 @@ const LoginPage = () => {
     };
 
     const registerNewUser = () => navigate("/register");
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <div style={layoutStyles.pageShell}>
@@ -142,7 +143,7 @@ const LoginPage = () => {
                                 <img src={logo} alt="FinCore" style={loginStyles.promoLogoImg} />
                             </div>
 
-                            <div style={loginStyles.promoEyebrow}>FINCORE BANK</div>
+                            <div style={loginStyles.promoEyebrow}>Secure Digital Banking Platform with Transaction Management System</div>
 
                             <h1 style={loginStyles.promoHeading}>
                                 Banking made
@@ -151,7 +152,7 @@ const LoginPage = () => {
                             </h1>
 
                             <p style={loginStyles.promoText}>
-                                Access your FinCore banking account
+                                Access your bank account
                                 through a secure and reliable digital
                                 banking experience.
                             </p>
@@ -204,18 +205,22 @@ const LoginPage = () => {
                                 onChange={onChangeHandler}
                                 error={errors.username}
                             />
-
+                             <div className="d-flex bg-white gap-1">
+                                 
                             <AppInput
                                 label="Password"
                                 name="password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 placeholder="Enter your password"
                                 value={loginData.password}
                                 onChange={onChangeHandler}
                                 error={errors.password}
-                                wrapperStyle={{ marginBottom: "28px" }}
+                                wrapperStyle={{ marginBottom: "28px",width:"100%" }}
                             />
-
+                            <div title="Show / Hide Password" className="m-auto p-2 btn border border-outline border-primary" onClick={()=>setShowPassword((prev) => !prev)}>
+                                {showPassword ? '🙈' : '👀'} <br />
+                            </div>
+                            </div> 
                             <AppButton type="submit" fullWidth>
                                 Sign in securely →
                             </AppButton>
@@ -238,7 +243,7 @@ const LoginPage = () => {
 
                         <div style={loginStyles.secureNote}>
                             🔒 Your banking session is protected by
-                            FinCore security controls.
+                            Secure Digital Banking Platform with Transaction Management System  security controls.
                         </div>
 
                     </div>
@@ -248,7 +253,7 @@ const LoginPage = () => {
 
             {/* ================= FOOTER ================= */}
             <footer style={layoutStyles.pageFooter}>
-                © 2026 FinCore Bank · Secure Banking. Stronger Future.
+                © 2026 Secure Digital Banking Platform with Transaction Management System . Stronger Future.
             </footer>
 
         </div>
