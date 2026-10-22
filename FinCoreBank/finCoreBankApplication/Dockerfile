@@ -4,8 +4,9 @@ WORKDIR /app
 
 COPY src src/
 COPY mvnw .
-COPY .mvn/ .mvn/
 COPY pom.xml .
+COPY .mvn/ .mvn/
+
 
 
 RUN chmod +x mvnw && ./mvnw clean package -DskipTests
