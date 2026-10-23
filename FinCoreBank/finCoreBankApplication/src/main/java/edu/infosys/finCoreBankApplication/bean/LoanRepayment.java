@@ -17,13 +17,12 @@ public class LoanRepayment {
     private Double remainingOutstanding;
 
     public LoanRepayment() { }
-
+    public Long getCustomerId() { return customerId; }
+    public void setCustomerId(Long customerId) { this.customerId = customerId; }
     public String getRepaymentId() { return repaymentId; }
     public void setRepaymentId(String repaymentId) { this.repaymentId = repaymentId; }
     public String getApplicationId() { return applicationId; }
     public void setApplicationId(String applicationId) { this.applicationId = applicationId; }
-    public Long getCustomerId() { return customerId; }
-    public void setCustomerId(Long customerId) { this.customerId = customerId; }
     public Long getAccountNumber() { return accountNumber; }
     public void setAccountNumber(Long accountNumber) { this.accountNumber = accountNumber; }
     public Double getPaymentAmount() { return paymentAmount; }

@@ -8,6 +8,7 @@ import { layoutStyles, loginStyles, buttonStyles } from "../../styles";
 import { setSession } from "../../utils/storage";
 import "../../DisplayView.css";
 import logo from "../../assets/logo.png";
+import {demoUsers} from "../../utils/dateUtils";
 
 const SECURITY_FEATURES = [
     "Secure account access",
@@ -187,7 +188,26 @@ const LoginPage = () => {
                                 Sign in to continue banking securely.
                             </p>
                         </div>
-
+                            <div className="space-y-3 "><div style={loginStyles.authCardEyebrow} >DEMO LOGIN ACCESS</div>
+                      
+                            <div className="d-flex flex-wrap gap-2 mb-3">
+                                {demoUsers.map((user) => (
+                                    <button
+                                        key={user.username}
+                                        type="button"
+                                        className="btn btn-outline-primary btn-sm"
+                                        onClick={() =>
+                                            setLoginData({
+                                                username: user.username,
+                                                password: user.password,
+                                            })
+                                        }
+                                    >
+                                        {user.username}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                         {!flag && (
                             <AppAlert variant="error">
                                 Invalid username or password.
@@ -195,7 +215,6 @@ const LoginPage = () => {
                         )}
 
                         <form onSubmit={handleValidation}>
-
                             <AppInput
                                 label="Username"
                                 name="username"
@@ -247,7 +266,6 @@ const LoginPage = () => {
                         </div>
 
                     </div>
-
                 </div>
             </main>
 
