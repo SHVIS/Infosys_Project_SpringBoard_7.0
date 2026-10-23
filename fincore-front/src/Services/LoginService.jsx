@@ -1,9 +1,9 @@
 import axios from "axios";
-const BaseURL='http://localhost:9797/fincore'
-const LOGIN_URL=BaseURL+'/login';
-const ROLE_URL=BaseURL+'/role';
-const LOGOUT_URL = BaseURL+'/logout';
-const USR_URL =BaseURL+ '/user';
+import { BASE_URL } from "../utils/constants";
+const LOGIN_URL=BASE_URL+'/login';
+const ROLE_URL=BASE_URL+'/role';
+const LOGOUT_URL = BASE_URL+'/logout';
+const USR_URL =BASE_URL+ '/user';
 
 export const registerNewUser=(user)=> {
         return axios.post(LOGIN_URL,user, {

@@ -22,3 +22,8 @@ export const formatDate = (date) => {
     });
 
 };
+export const demoUsers = [
+    { username: "Jenia", password: "Pineapple", role: "Customer" },
+    { username: "Tulip", password: "Pears", role: "Customer" },
+    { username: "Marigold", password: "Guava", role: "Customer" },
+];

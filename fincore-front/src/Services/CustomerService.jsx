@@ -1,10 +1,10 @@
 import axios from 'axios';
-
-const CUST_URL='http://localhost:9797/fincore/customer';
-const CUST_USER_URL='http://localhost:9797/fincore/cust-user';
-const INFO_URL='http://localhost:9797/fincore/cust-info';
-const CHK_URL = 'http://localhost:9797/fincore/cust-chk';
-const ID_URL= 'http://localhost:9797/fincore/cust-ids';
+import { BASE_URL } from "../utils/constants";
+const CUST_URL=BASE_URL+'/fincore/customer';
+const CUST_USER_URL=BASE_URL+'/fincore/cust-user';
+const INFO_URL=BASE_URL+'/fincore/cust-info';
+const CHK_URL = BASE_URL+'/fincore/cust-chk';
+const ID_URL= BASE_URL+'/fincore/cust-ids';
 
 
 export const addCustomer=(customer) => {

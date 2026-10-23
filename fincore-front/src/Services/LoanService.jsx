@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const BASE_URL = "http://localhost:9797/fincore";
+import { BASE_URL } from "../utils/constants";
 const LOAN_URL = `${BASE_URL}/loan`;
 const APPLICATION_URL = `${BASE_URL}/loan-applications`;
 

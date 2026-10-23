@@ -2,6 +2,8 @@
  * Small set of literal values that were repeated verbatim across
  * pages (status codes, minimum balance, storage keys).
  */
+export const BASE_URL= process.env.REACT_APP_BASE_URL; //production 
+// export const BASE_URL="http://localhost:9797"
 export const CUSTOMER_STATUS = {
     APPROVED: "A",
     PENDING: "P",

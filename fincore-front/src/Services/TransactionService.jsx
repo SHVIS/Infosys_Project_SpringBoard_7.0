@@ -1,8 +1,8 @@
 import axios from 'axios';
-
-// const TY_URL = 'http://localhost:9797/fincore/trans-type';const TAC_URL = 'http://localhost:9797/fincore/trans-ac';
-const TINFO_URL = 'http://localhost:9797/fincore/trans-info';
-const TR_URL = 'http://localhost:9797/fincore/trans';
+import { BASE_URL } from "../utils/constants";
+// const TY_URL = BASE_URL+'/fincore/trans-type';const TAC_URL = BASE_URL+'/fincore/trans-ac';
+const TINFO_URL = BASE_URL+'/fincore/trans-info';
+const TR_URL = BASE_URL+'/fincore/trans';
 
 
 // Generate Transaction ID
