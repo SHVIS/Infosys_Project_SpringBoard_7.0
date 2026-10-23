@@ -14,7 +14,6 @@ import edu.infosys.finCoreBankApplication.service.CustomerLoanService;
 
 @RestController
 @RequestMapping("/fincore/")
-@CrossOrigin(origins="http://localhost:3737",allowCredentials = "true")
 
 public class CustomerLoanController {
 	

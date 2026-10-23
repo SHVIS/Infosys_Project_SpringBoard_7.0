@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import edu.infosys.finCoreBankApplication.bean.Customer;
 import edu.infosys.finCoreBankApplication.dao.CustomerDao;
 import edu.infosys.finCoreBankApplication.dao.CustomerRepository;
 import edu.infosys.finCoreBankApplication.service.CustomerService;
+
 @RestController
 @RequestMapping("/fincore/")
-@CrossOrigin(origins="http://localhost:3737",allowCredentials = "true")
+
 public class CustomerController{
 
 	@Autowired

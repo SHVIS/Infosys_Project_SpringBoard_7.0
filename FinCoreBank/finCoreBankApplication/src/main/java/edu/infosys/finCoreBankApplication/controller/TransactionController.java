@@ -19,7 +19,7 @@ import edu.infosys.finCoreBankApplication.service.TransactionService;
 
 @RestController
 @RequestMapping("/fincore/")
-@CrossOrigin(origins="http://localhost:3737",allowCredentials = "true")
+
 public class TransactionController {
 	
 	@Autowired

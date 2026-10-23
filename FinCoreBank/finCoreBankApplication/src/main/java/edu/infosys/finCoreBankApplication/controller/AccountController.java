@@ -21,7 +21,6 @@ import edu.infosys.finCoreBankApplication.dao.AccountRepository;
 import edu.infosys.finCoreBankApplication.service.AccountService;
 @RestController
 @RequestMapping("/fincore/")
-@CrossOrigin(origins="http://localhost:3737",allowCredentials = "true")
 
 public class AccountController{
 	
