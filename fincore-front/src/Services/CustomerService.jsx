@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { BASE_URL } from "../utils/constants";
-const CUST_URL=BASE_URL+'/fincore/customer';
-const CUST_USER_URL=BASE_URL+'/fincore/cust-user';
-const INFO_URL=BASE_URL+'/fincore/cust-info';
-const CHK_URL = BASE_URL+'/fincore/cust-chk';
-const ID_URL= BASE_URL+'/fincore/cust-ids';
+const CUST_URL=BASE_URL+'/customer';
+const CUST_USER_URL=BASE_URL+'/cust-user';
+const INFO_URL=BASE_URL+'/cust-info';
+const CHK_URL = BASE_URL+'/cust-chk';
+const ID_URL= BASE_URL+'/cust-ids';
 
 
 export const addCustomer=(customer) => {

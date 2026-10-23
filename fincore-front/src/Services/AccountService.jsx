@@ -2,12 +2,12 @@ import React from 'react'
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 
-const AC_URL=BASE_URL+'/fincore/account';
-const AINFO_URL=BASE_URL+'/fincore/account-info';
-const BINFO_URL=BASE_URL+'/fincore/balance-info';
- const ID_URL=BASE_URL+'/fincore/account-id';
-const LIST_URL=BASE_URL+'/fincore/id-list';
-const ACS_URL=BASE_URL+'/fincore/accounts';
+const AC_URL=BASE_URL+'/account';
+const AINFO_URL=BASE_URL+'/account-info';
+const BINFO_URL=BASE_URL+'/balance-info';
+ const ID_URL=BASE_URL+'/account-id';
+const LIST_URL=BASE_URL+'/id-list';
+const ACS_URL=BASE_URL+'/accounts';
  
 export const addAccount=(account) => {
     return axios.post(AC_URL,account , {

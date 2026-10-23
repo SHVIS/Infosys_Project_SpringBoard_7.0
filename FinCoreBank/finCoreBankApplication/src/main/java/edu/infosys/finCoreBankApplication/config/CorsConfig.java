@@ -1,4 +1,4 @@
-package edu.infosys.finCoreBankApplication.config;
+package main.java.edu.infosys.finCoreBankApplication.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
