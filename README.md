@@ -1,3 +1,3 @@
-# Infosys Project SpringBoard 7.0
- ## FinCore Bank Application (MIT LICENCED)
+# Java FullStack (Infosys Project SpringBoard 7.0)
+ ### FinCore Bank Application (MIT LICENCED)
   
